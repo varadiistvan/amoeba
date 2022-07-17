@@ -134,29 +134,29 @@ export const Canvas = (props: CanvasProps) => {
       switch(win.type) {
         case "diag1": {
 
-          context.moveTo((win.coords.x-2)*20 - displacement.x, (win.coords.y-2)*20 - displacement.y)
-          context.lineTo((win.coords.x+3)*20 - displacement.x, (win.coords.y+3)*20 - displacement.y)
+          context.moveTo((win.coords.x-2)*20 - displacement.x +7, (win.coords.y-2)*20 - displacement.y +7)
+          context.lineTo((win.coords.x+3)*20 - displacement.x -7, (win.coords.y+3)*20 - displacement.y -7)
 
           break
         }
         case 'diag2': {
 
-          context.moveTo((win.coords.x-2)*20 - displacement.x, (win.coords.y+3)*20 - displacement.y)
-          context.lineTo((win.coords.x+3)*20 - displacement.x, (win.coords.y-2)*20 - displacement.y)
+          context.moveTo((win.coords.x-2)*20 - displacement.x +7, (win.coords.y+3)*20 - displacement.y -7)
+          context.lineTo((win.coords.x+3)*20 - displacement.x -7, (win.coords.y-2)*20 - displacement.y +7)
 
           break
         }
         case 'vert': {
 
-          context.moveTo((win.coords.x)*20 - displacement.x + 10, (win.coords.y-2)*20 - displacement.y)
-          context.lineTo((win.coords.x)*20 - displacement.x + 10, (win.coords.y+3)*20 - displacement.y)
+          context.moveTo((win.coords.x)*20 - displacement.x + 10, (win.coords.y-2)*20 - displacement.y +5)
+          context.lineTo((win.coords.x)*20 - displacement.x + 10, (win.coords.y+3)*20 - displacement.y -5)
 
           break
         }
         case 'horiz': {
 
-          context.moveTo((win.coords.x-2)*20 - displacement.x, (win.coords.y)*20 - displacement.y + 10)
-          context.lineTo((win.coords.x+3)*20 - displacement.x , (win.coords.y)*20 - displacement.y + 10)
+          context.moveTo((win.coords.x-2)*20 - displacement.x +5, (win.coords.y)*20 - displacement.y + 10)
+          context.lineTo((win.coords.x+3)*20 - displacement.x -5, (win.coords.y)*20 - displacement.y + 10)
 
           break
         }
