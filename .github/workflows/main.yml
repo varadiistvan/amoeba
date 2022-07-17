@@ -33,5 +33,5 @@ jobs:
       - name: Run a multi-line script
         run: |
           rm -rf node_modules/ |
-          npm i |
+          npm ci |
           npm run build
