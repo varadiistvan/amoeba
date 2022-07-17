@@ -1,26 +1,23 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useRef, useState } from 'react';
+import { Canvas } from './Canvas';
 
-function App() {
+interface AppProps extends React.HTMLAttributes<HTMLDivElement> {}
+
+export const App = (props: AppProps) => {
+
+  const parentRef = useRef<HTMLDivElement>(null)
+
+  const [dimensions, setDimensions] = useState<{width: number, height: number}>({width: 0, height: 0})
+
+  useEffect(() => {
+    if(parentRef.current) {
+      setDimensions({height: parentRef.current.offsetHeight, width: parentRef.current.offsetWidth})
+    }
+  }, [parentRef])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div {...props} ref={parentRef} >
+      <Canvas {...dimensions} />
     </div>
   );
 }
-
-export default App;
