@@ -33,6 +33,8 @@ export const Canvas = (props: CanvasProps) => {
 
   const [wins, setWins] = useState<Win[]>([])
 
+  const [prevTouch, setPrevTouch] = useState<React.Touch | null>(null)
+
   const toggleTurn = () => {
     setTurn(old => -old+1)
   }
@@ -42,30 +44,74 @@ export const Canvas = (props: CanvasProps) => {
   const minDist = Math.min(props.width, props.height)/100
 
   const mouseDown = (ev: React.MouseEvent<HTMLCanvasElement>) => {
+    ev.preventDefault()
+    ev.stopPropagation()
+    downHandler(ev.pageX, ev.pageY)
+  }
+
+  const touchStart = (ev: React.TouchEvent<HTMLCanvasElement>) => {
+    ev.stopPropagation()
+    setPrevTouch(ev.touches[0])
+    downHandler(ev.touches[0].pageX, ev.touches[0].pageY)
+  }
+
+  const downHandler = (x: number, y: number) => {
     if(startPos == null) {
-      setStartPos({x: ev.pageX, y: ev.pageY})
+      setStartPos({x, y})
     }
   }
 
   const mouseMove = (ev: React.MouseEvent<HTMLCanvasElement>) => {
-    if(isDragging) {
-      setDisplacement(old => ({x: old.x - ev.movementX/window.devicePixelRatio, y: old.y - ev.movementY/window.devicePixelRatio}))
+    ev.preventDefault()
+    ev.stopPropagation()
+    moveHandler(ev.pageX, ev.pageY, ev.movementX, ev.movementY)
+  }
+
+  
+  const touchMove = (ev: React.TouchEvent<HTMLCanvasElement>) => {
+    const movement = {x: 0, y: 0}
+    if(prevTouch) {
+      movement.x = ev.touches[0].pageX - prevTouch.pageX
+      movement.y = ev.touches[0].pageY - prevTouch.pageY
     }
-    else if(startPos && (Math.abs(ev.pageX - startPos.x) > minDist || Math.abs(ev.pageY - startPos.y) > minDist)) {
+    setPrevTouch(ev.touches[0])
+
+    moveHandler(ev.touches[0].pageX, ev.touches[0].pageY, movement.x, movement.y)
+  }
+
+  const moveHandler = (x: number, y: number, moveX: number, moveY: number) => {
+    if(isDragging) {
+      setDisplacement(old => ({x: old.x - moveX/window.devicePixelRatio, y: old.y - moveY/window.devicePixelRatio}))
+    }
+    else if(startPos && (Math.abs(x - startPos.x) > minDist || Math.abs(y - startPos.y) > minDist)) {
       setIsDragging(true)
       setDisplacement(old => ({
-        x: old.x + (ev.pageX - startPos.x)/window.devicePixelRatio,
-        y: old.y + (ev.pageY - startPos.y)/window.devicePixelRatio
+        x: old.x + (x - startPos.x)/window.devicePixelRatio,
+        y: old.y + (y - startPos.y)/window.devicePixelRatio
       }))
     }
   }
 
   const mouseUp = (ev: React.MouseEvent<HTMLCanvasElement>) => {
+    ev.preventDefault()
+    ev.stopPropagation()
+    upHandler(ev.pageX, ev.pageY) 
+  }
 
+  const touchEnd = (ev: React.TouchEvent<HTMLCanvasElement>) => {
+    ev.preventDefault()
+    ev.stopPropagation()
+    if(prevTouch) {
+      upHandler(prevTouch.pageX, prevTouch.pageY)
+    }
+    setPrevTouch(null)
+  }
+
+  const upHandler = (x: number, y: number) => {
     setStartPos(null)
 
     if(!isDragging) {
-      const coordinates: Coordinates = {x: Math.floor((ev.clientX/window.devicePixelRatio+displacement.x)/20), y: Math.floor((ev.clientY/window.devicePixelRatio+displacement.y)/20)}
+      const coordinates: Coordinates = {x: Math.floor((x/window.devicePixelRatio+displacement.x)/20), y: Math.floor((y/window.devicePixelRatio+displacement.y)/20)}
 
       const key = JSON.stringify(coordinates)
 
@@ -80,7 +126,6 @@ export const Canvas = (props: CanvasProps) => {
     else {
       setIsDragging(false)
     }
-    
   }
 
   const drawFasz = (canvas: HTMLCanvasElement | null, context: CanvasRenderingContext2D | null | undefined) => {
@@ -252,6 +297,6 @@ export const Canvas = (props: CanvasProps) => {
 
   return <>
     <button style={{position: 'absolute'}} onClick={() => setDisplacement({x: 0, y: 0})}>reset</button>
-    <canvas ref={canvasRef} {...props} style={{...props.style, cursor: "pointer"}} onMouseDown={mouseDown} onMouseUp={mouseUp} onMouseMove={mouseMove} />
+    <canvas ref={canvasRef} {...props} style={{...props.style, cursor: "pointer"}} onTouchStart={touchStart} onTouchMove={touchMove} onTouchEnd={touchEnd} onMouseDown={mouseDown} onMouseUp={mouseUp} onMouseMove={mouseMove} />
   </>
 }
