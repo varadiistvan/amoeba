@@ -17,7 +17,7 @@ export const App = (props: AppProps) => {
 
   return (
     <div {...props} ref={parentRef} >
-      <Canvas {...dimensions} />
+      <Canvas {...dimensions} style={{touchAction: 'none', userSelect: 'none'}} />
     </div>
   );
 }

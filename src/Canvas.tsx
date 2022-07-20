@@ -41,13 +41,18 @@ export const Canvas = (props: CanvasProps) => {
 
   const minDist = Math.min(props.width, props.height)/100
 
-  const mouseDown = (ev: React.MouseEvent<HTMLCanvasElement>) => {
+  const mouseDown = (ev: React.PointerEvent<HTMLCanvasElement>) => {
+    ev.preventDefault()
+    ev.stopPropagation()
     if(startPos == null) {
       setStartPos({x: ev.pageX, y: ev.pageY})
     }
   }
 
-  const mouseMove = (ev: React.MouseEvent<HTMLCanvasElement>) => {
+  const mouseMove = (ev: React.PointerEvent<HTMLCanvasElement>) => {
+    ev.preventDefault()
+    ev.stopPropagation()
+    console.log(ev)
     if(isDragging) {
       setDisplacement(old => ({x: old.x - ev.movementX/window.devicePixelRatio, y: old.y - ev.movementY/window.devicePixelRatio}))
     }
@@ -60,7 +65,9 @@ export const Canvas = (props: CanvasProps) => {
     }
   }
 
-  const mouseUp = (ev: React.MouseEvent<HTMLCanvasElement>) => {
+  const mouseUp = (ev: React.PointerEvent<HTMLCanvasElement>) => {
+    ev.preventDefault()
+    ev.stopPropagation()
 
     setStartPos(null)
 
@@ -252,6 +259,6 @@ export const Canvas = (props: CanvasProps) => {
 
   return <>
     <button style={{position: 'absolute'}} onClick={() => setDisplacement({x: 0, y: 0})}>reset</button>
-    <canvas ref={canvasRef} {...props} style={{...props.style, cursor: "pointer"}} onMouseDown={mouseDown} onMouseUp={mouseUp} onMouseMove={mouseMove} />
+    <canvas ref={canvasRef} {...props} style={{...props.style, cursor: "pointer"}} onPointerDown={mouseDown} onPointerUp={mouseUp} onPointerMove={mouseMove} />
   </>
 }
