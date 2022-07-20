@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/amoeba/static/js/main.140ee833.js",
+    "main.js": "/amoeba/static/js/main.f6f687ad.js",
     "index.html": "/amoeba/index.html",
-    "main.140ee833.js.map": "/amoeba/static/js/main.140ee833.js.map"
+    "main.f6f687ad.js.map": "/amoeba/static/js/main.f6f687ad.js.map"
   },
   "entrypoints": [
-    "static/js/main.140ee833.js"
+    "static/js/main.f6f687ad.js"
   ]
 }
